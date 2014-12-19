@@ -1,10 +1,10 @@
 {
   "name": "node_crusher",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "node-crusher",
-  "main": "app.js",
+  "main": "crusher.js",
   "author": {
-    "name": "bergw",
-    "email": ""
+    "name": "Wilhelm Berg",
+    "email": "wb@BergWerk-GIS.at"
   }
 }
