@@ -1,0 +1,10 @@
+{
+  "name": "node_crusher",
+  "version": "0.0.0",
+  "description": "node-crusher",
+  "main": "app.js",
+  "author": {
+    "name": "bergw",
+    "email": ""
+  }
+}
