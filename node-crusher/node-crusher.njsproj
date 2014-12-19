@@ -12,7 +12,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>c2e56bf4-159b-4e12-be75-fc50d1a11e38</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>crusher.js</StartupFile>
+    <StartupFile>lib\crusher.js</StartupFile>
     <StartWebBrowser>False</StartWebBrowser>
     <SearchPath>
     </SearchPath>
@@ -30,9 +30,14 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="crusher.js" />
+    <Compile Include="lib\crusher.js" />
+    <Compile Include="test\test-ram.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="lib\" />
+    <Folder Include="test\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
 </Project>

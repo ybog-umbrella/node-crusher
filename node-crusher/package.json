@@ -2,7 +2,7 @@
   "name": "node_crusher",
   "version": "0.0.1",
   "description": "node-crusher",
-  "main": "crusher.js",
+  "main": "./lib/crusher.js",
   "author": {
     "name": "Wilhelm Berg",
     "email": "wb@BergWerk-GIS.at"
