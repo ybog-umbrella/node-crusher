@@ -7,10 +7,13 @@ var stop_eating_cpu = false;
 var buffer;
 var crusher = module.exports = exports;
 
+process.env.UV_THREADPOOL_SIZE = Math.ceil(Math.max(4, require('os').cpus().length * 1.5));
+
 
 process.on('exit', function () {
 	console.log(mname + ' exiting ...');
 	crusher.release_ram();
+	crusher.stop_cpu();
 });
 
 
@@ -60,24 +63,22 @@ exports.release_ram = function () {
 	}
 };
 
+var running = 0;
+var limit = 6;
 
-exports.eat_cpu = function (callback) {
-	//process.env.UV_THREADPOOL_SIZE = Math.ceil(Math.max(4, require('os').cpus().length * 1.5));
-	//process.nextTick(function () {
-	//	stop_eating_cpu = false;
-	//	console.log(mname + ': eating cpu');
-	//	for (var i = 0; i < 2; i++) {
-	//		fibonacci(43);
-	//		if (1 === i) { i = -1; }
-	//		if (true === stop_eating_cpu) { break; }
-	//	}
-	//	callback(null, mname + ': eating cpu stopped');
-	//});
-	for (var i = 0; i < 5; i++) {
-		fibonacciAsync(5, i, function (res) {
-			callback(null, res);
-		
+exports.eat_cpu = function () {
+	
+	while (running < limit && false === stop_eating_cpu) {
+		//console.log(mname + ': before fib', running);
+		console.log(mname + ': calc start, calcs running', running);
+		fibonacciAsync(43, running, function (res) {
+			console.log(mname + ': calc finished, calcs running', running);
+			running--;
+			if (running <= limit) {
+				crusher.eat_cpu();
+			}
 		});
+		running++;
 	}
 };
 
@@ -89,45 +90,28 @@ exports.stop_cpu = function () {
 
 
 function fibonacciAsync(n, i, done) {
-	console.log(mname + ': stop_eating_cpu '+ i, stop_eating_cpu);
-	if (true === stop_eating_cpu) { return; }
-	
-	if (n == 1 || n == 2) {
-		done(1);
-	}
-	else {
-		setImmediate(function () {
-			fibonacciAsync(n - 1, i , function (val1) {
-				setImmediate(function () {
-					fibonacciAsync(n - 2, i, function (val2) {
-						done(val1 + val2);
+	//console.log(mname + ': stop_eating_cpu ' + i, stop_eating_cpu);
+	if (-1 === i || true === stop_eating_cpu) {
+		//console.log(mname + ': stop_eating_cpu ' + i);
+		done(-1);
+	} else {
+		
+		if (n == 1 || n == 2) {
+			done(1);
+		}
+		else {
+			setImmediate(function () {
+				fibonacciAsync(n - 1, i , function (val1) {
+					setImmediate(function () {
+						fibonacciAsync(n - 2, i, function (val2) {
+							done(val1 + val2);
+						});
 					});
 				});
 			});
-		});
+		}
 	}
 }
-
-
-function fibonacciAsyncORIG(n, done) {
-	if (true === stop_eating_cpu) { done(1); }
-	
-	if (n == 1 || n == 2) {
-		done(1);
-	}
-	else {
-		process.nextTick(function () {
-			fibonacciAsync(n - 1 , function (val1) {
-				process.nextTick(function () {
-					fibonacciAsync(n - 2, function (val2) {
-						done(val1 + val2);
-					});
-				});
-			});
-		});
-	}
-}
-
 
 function fibonacci(n) {
 	if (true === stop_eating_cpu) { return 1; }
